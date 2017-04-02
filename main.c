@@ -37,8 +37,7 @@ int main() {
   uart_init();
   stdout = &uart_output;
   stdin = &uart_input;
-
-  iobuffer[0] = ID;
+  
   iobuffer[1] = CARD_TYPE;
 
   SetupSpi();

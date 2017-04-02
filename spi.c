@@ -7,12 +7,17 @@
 #include <stdio.h>
 
 volatile char iobuffer[IOBUFSIZE];
+volatile char slot;
 
 void SetupSpi()
 {
     SPCR = 0xC0;
     EICRA |= 0x03;
     EIMSK |= 0x01;
+
+    //get slot
+    slot = 5;
+    iobuffer[0] = slot;
 }
 
 volatile char addr;
@@ -21,7 +26,7 @@ volatile char state = -1;
 ISR(SPI_STC_vect) {
   char c = SPDR;
     if (state == 0x00) {
-      if ((c & 0x001F) == ID) {
+      if ((c & 0x001F) == slot) {
         DDRB |= _BV(DDB4);
         if (c & 0xE0) {
           state = 0x03; // go to wait address write
