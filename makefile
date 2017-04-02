@@ -29,9 +29,9 @@ all: motormont temperature relay
 	avr-objcopy -j .text -j .data -O ihex bin/generic/out.o bin/generic/out.hex
 
 motormont:
-	mkdir -p bin/current
-	$(CC) -o bin/current/out.o $(SRC) $(CFLAGS) ${INCL} -D CARD_TYPE=CARD_TYPE_MOTORMONT
-	avr-objcopy -j .text -j .data -O ihex bin/current/out.o bin/current/out.hex
+	mkdir -p bin/motormont
+	$(CC) -o bin/motormont/out.o $(SRC) $(CFLAGS) ${INCL} -D CARD_TYPE=CARD_TYPE_MOTORMONT
+	avr-objcopy -j .text -j .data -O ihex bin/motormont/out.o bin/motormont/out.hex
 
 temperature:
 	mkdir -p bin/temperature
