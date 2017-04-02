@@ -2,6 +2,7 @@
 #include <avr/interrupt.h>
 
 #include "spi.h"
+#include "carddefs.h"
 #include "options.h"
 #include <stdio.h>
 

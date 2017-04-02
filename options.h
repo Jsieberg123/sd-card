@@ -1,3 +1,5 @@
 #define ID 5
 
-#define CARD_TYPE CARD_TYPE_MOTORMONT
+#ifndef CARD_TYPE
+#define CARD_TYPE CARD_TYPE_GENERIC
+#endif

@@ -19,34 +19,29 @@ CC = avr-gcc
 CFLAGS = -mmcu=atmega328 -O2 -std=gnu99
 
 default:
-	mkdir -p bin
-	$(CC) -o bin/out.o $(SRC) $(CFLAGS) $(INCL)
+	mkdir -p bin/generic
+	$(CC) -o bin/generic/out.o $(SRC) $(CFLAGS) $(INCL)
 	avr-objcopy -j .text -j .data -O ihex bin/out.o bin/out.hex
 
-all: current voltage temperature relay
-	mkdir -p bin
-	$(CC) -o bin/out.o $(SRC) $(CFLAGS) $(INCL)
-	avr-objcopy -j .text -j .data -O ihex bin/out.o bin/out.hex
+all: motormont temperature relay
+	mkdir -p bin/generic
+	$(CC) -o bin/generic/out.o $(SRC) $(CFLAGS) $(INCL)
+	avr-objcopy -j .text -j .data -O ihex bin/generic/out.o bin/generic/out.hex
 
-current:
-	mkdir -p bin
-	$(CC) -o bin/current.o $(SRC) $(CFLAGS) ${INCL} -D CARD_TYPE=CARD_TYPE_CURRENT
-	avr-objcopy -j .text -j .data -O ihex bin/current.o bin/current.hex
-
-voltage:
-	mkdir -p bin
-	$(CC) -o bin/voltage.o $(SRC) $(CFLAGS) ${INCL} -D CARD_TYPE=CARD_TYPE_VOLTAGE
-	avr-objcopy -j .text -j .data -O ihex bin/voltage.o bin/voltage.hex
+motormont:
+	mkdir -p bin/current
+	$(CC) -o bin/current/current.o $(SRC) $(CFLAGS) ${INCL} -D CARD_TYPE=CARD_TYPE_MOTORMONT
+	avr-objcopy -j .text -j .data -O ihex bin/current/current.o bin/current/current.hex
 
 temperature:
-	mkdir -p bin
-	$(CC) -o bin/temperature.o $(SRC) $(CFLAGS) ${INCL} -D CARD_TYPE=CARD_TYPE_TEMPERATURE
-	avr-objcopy -j .text -j .data -O ihex bin/temperature.o bin/temperature.hex
+	mkdir -p bin/temperature
+	$(CC) -o bin/temperature/temperature.o $(SRC) $(CFLAGS) ${INCL} -D CARD_TYPE=CARD_TYPE_TEMPERATURE
+	avr-objcopy -j .text -j .data -O ihex bin/temperature/temperature.o bin/temperature/temperature.hex
 
 relay:
-	mkdir -p bin
-	$(CC) -o bin/relay.o $(SRC) $(CFLAGS) ${INCL} -D CARD_TYPE=CARD_TYPE_RELAY
-	avr-objcopy -j .text -j .data -O ihex bin/relay.o bin/relay.hex
+	mkdir -p bin/relay
+	$(CC) -o bin/relay/relay.o $(SRC) $(CFLAGS) ${INCL} -D CARD_TYPE=CARD_TYPE_RELAY
+	avr-objcopy -j .text -j .data -O ihex bin/relay/relay.o bin/relay/relay.hex
 
 clean: 
 	rm -rf bin
