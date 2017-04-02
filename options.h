@@ -1,0 +1,3 @@
+#define ID 5
+
+#define CARD_TYPE CARD_TYPE_MOTORMONT
