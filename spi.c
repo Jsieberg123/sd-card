@@ -17,7 +17,6 @@ void SetupSpi()
 
     //get slot
     slot = 5;
-    iobuffer[0] = slot;
 }
 
 volatile char addr;
