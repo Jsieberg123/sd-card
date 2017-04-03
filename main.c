@@ -39,7 +39,7 @@ int main()
 
     DDRD |= _BV(DDD7);
 
-    OCR1A = 8000;
+    OCR1A = 80;
     TCCR1B = 0x09;
     TIMSK1 |= (1 << OCIE1A);    
 
@@ -51,9 +51,11 @@ int main()
 
     sei();
 
-    AddTask(1000, NULL, ToggleLed);
-    int adc0 = 0;
-    AddTask(1000, &adc0, GetAdcValue);
+    AddTask(100000UI, NULL, ToggleLed);
+
+    #if CARD_TYPE == CARD_TYPE_MOTORMONT
+    CreateAdcTasks();
+    #endif
 
     while (true){
         RunExpiredTasks();
@@ -78,10 +80,4 @@ void ToggleLed(void* unused)
         printf("OFF\n");
         StatusLed = true;
     }
-}
-
-void GetAdcValue(void* param)
-{
-    int adcNum = *(int*)param;
-    int value = ReadADC(adcNum);
 }
