@@ -17,6 +17,10 @@ case $key in
     ADDR="$2"
     shift 2 # past argument
     ;;
+    -s)
+    SETUP="$2"
+    shift 2 # past argument
+    ;;
     *)
         shift    # unknown option
     ;;
@@ -24,19 +28,24 @@ case $key in
 done
 
 echo "Building"
-mkdir -p bin
+if [ -z "$SETUP" ]
+    then
+        exit
+fi
+mkdir bin
+mkdir bin/$SETUP
 if [ "$O" = y ]
-    then make > bin/buildmsg.txt
-    else make &> bin/buildmsg.txt
+    then make $SETUP > bin/$SETUP/buildmsg.txt
+    else make $SETUP &> bin/$SETUP/buildmsg.txt
 fi
 echo "Converting to hex."
-avr-objcopy -j .text -j .data -O ihex bin/out.o bin/out.hex
+avr-objcopy -j .text -j .data -O ihex bin/$SETUP/out.o bin/$SETUP/out.hex
 if [ -z "$ADDR" ]
     then
         exit
 fi
 echo "Uploading to pi."
-scp bin/out.hex pi@$ADDR:~/bin/out.hex
+scp bin/$SETUP/out.hex pi@$ADDR:~/bin/out.hex
 echo "Kill node"
 ssh pi@$ADDR 'killall node'
 echo "Uploading to avr"

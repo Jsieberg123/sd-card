@@ -3,14 +3,6 @@
 
 void SetupAdc();
 
-void ReadAdcTask(void *pvParameters);
-
-void CreateReadAdcTask(char pin, char resultAddr, unsigned int time);
-
-struct AdcTaskInput{
-	char pin;
-	char resultAddr;
-	unsigned int time;
-};
+unsigned int ReadADC(char ADCchanne);
 
 #endif

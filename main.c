@@ -10,10 +10,7 @@
 
 #define F_CPU 8000000UL
 
-#include "FreeRTOS.h"
-#include "queue.h"
-#include "semphr.h"
-#include "task.h"
+#include "options.h"
 
 #include <avr/interrupt.h>
 #include <avr/io.h>
@@ -24,85 +21,67 @@
 #include "spi.h"
 #include "uart.h"
 #include "adc.h"
+#include "tasks.h"
 #include "carddefs.h"
-#include "options.h"
-
-static void TaskBlinkGreenLED(void *pvParameters);
-
-static xSemaphoreHandle mut;
 
 //-----------------------------------------------------------
 
-int main() {
-  uart_init();
-  stdout = &uart_output;
-  stdin = &uart_input;
+void ToggleLed(void*);
+void GetAdcValue(void* param);
 
-  iobuffer[0] = CARD_TYPE;
+int main()
+{
+    uart_init();
+    stdout = &uart_output;
+    stdin = &uart_input;
 
-  SetupSpi();
+    printf("App Starting!\n");
 
-  SetupAdc();
-  
-  sei();
+    DDRD |= _BV(DDD7);
 
-  mut = xSemaphoreCreateMutex();
+    OCR1A = 8000;
+    TCCR1B = 0x09;
+    TIMSK1 |= (1 << OCIE1A);    
 
-  xTaskCreate(TaskBlinkGreenLED, (const portCHAR *)"GreenLED", 50, NULL, 3, NULL);
+    iobuffer[0] = CARD_TYPE;
 
-  #if CARD_TYPE == CARD_TYPE_MOTORMONT
-    CreateReadAdcTask(1, 10, 100);
-    CreateReadAdcTask(2, 12, 100);
-    CreateReadAdcTask(3, 14, 100);
-    CreateReadAdcTask(4, 16, 100);
-    CreateReadAdcTask(5, 18, 100);
-    CreateReadAdcTask(6, 20, 100);
-  #endif
+    SetupSpi();
 
-  vTaskStartScheduler();
+    SetupAdc();
 
-  for (;;)
-    ;
-  ;
+    sei();
 
-  return 0;
+    AddTask(1000, NULL, ToggleLed);
+    int adc0 = 0;
+    AddTask(1000, &adc0, GetAdcValue);
+
+    while (true){
+        RunExpiredTasks();
+    }
+
+    return 0;
 }
 
-//-----------------------------------------------------------
+char StatusLed = false;
 
-// Main Green LED Flash
-static void TaskBlinkGreenLED(void *pvParameters) {
-  // set pin 5 of PORTB for output
-  DDRD |= _BV(DDD7);
-
-  TickType_t xLastWakeTime = xTaskGetTickCount();
-  while (true) {
-    // LED on
-    PORTD |= _BV(PORTD7);
-    // printf("ON\n");
-    vTaskDelayUntil(&xLastWakeTime, (2000 / portTICK_PERIOD_MS));
-
-    // LED off
-    PORTD &= ~_BV(PORTD7);
-    // printf("OFF\n");
-    vTaskDelayUntil(&xLastWakeTime, (1000 / portTICK_PERIOD_MS));
-  }
-
-  vTaskDelete(NULL);
+void ToggleLed(void* unused)
+{
+    if (StatusLed)
+    {
+        PORTD |= _BV(PORTD7);
+        printf("ON\n");
+        StatusLed = false;
+    }
+    else
+    {
+        PORTD &= ~_BV(PORTD7);
+        printf("OFF\n");
+        StatusLed = true;
+    }
 }
 
-//-----------------------------------------------------------
-
-void vApplicationStackOverflowHook(TaskHandle_t xTask, portCHAR *pcTaskName) {
-  // main LED on
-  DDRB |= _BV(DDB5);
-  PORTB |= _BV(PORTB5);
-
-  // die
-  while (true) {
-    PORTB |= _BV(PORTB5);
-    _delay_ms(250);
-    PORTB &= ~_BV(PORTB5);
-    _delay_ms(250);
-  }
+void GetAdcValue(void* param)
+{
+    int adcNum = *(int*)param;
+    int value = ReadADC(adcNum);
 }
