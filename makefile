@@ -1,12 +1,12 @@
-INCL = -I .
+INCL = -I . -I spi -I uart -I adc -I tasks -I relay
 
 SRC	= \
 main.c \
-spi.c \
-uart.c \
-adc.c \
-tasks.c
-
+spi/spi.c \
+uart/uart.c \
+adc/adc.c \
+tasks/tasks.c \
+relay/relay.c
 CC = avr-gcc
 CFLAGS = -mmcu=atmega328 -O2 -std=gnu99
 

@@ -22,6 +22,7 @@
 #include "uart.h"
 #include "adc.h"
 #include "tasks.h"
+#include "relay.h"
 #include "carddefs.h"
 
 //-----------------------------------------------------------
@@ -46,15 +47,18 @@ int main()
     iobuffer[0] = CARD_TYPE;
 
     SetupSpi();
-
-    SetupAdc();
-
     sei();
 
     AddTask(100000UI, NULL, ToggleLed);
 
     #if CARD_TYPE == CARD_TYPE_MOTORMONT
+    SetupAdc();    
     CreateAdcTasks();
+    #endif
+
+    #if CARD_TYPE == CARD_TYPE_RELAY
+    SetupRelays();
+    CreateRelayTasks();
     #endif
 
     while (true){
