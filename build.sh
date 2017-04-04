@@ -35,8 +35,8 @@ fi
 mkdir bin
 mkdir bin/$SETUP
 if [ "$O" = y ]
-    then make $SETUP > bin/$SETUP/buildmsg.txt
-    else make $SETUP &> bin/$SETUP/buildmsg.txt
+    then make -B $SETUP > bin/$SETUP/buildmsg.txt
+    else make -B $SETUP &> bin/$SETUP/buildmsg.txt
 fi
 echo "Converting to hex."
 avr-objcopy -j .text -j .data -O ihex bin/$SETUP/out.o bin/$SETUP/out.hex

@@ -15,7 +15,7 @@ void SetupAdc()
     ADMUX |= (1 << REFS0);
     //set prescaller to 128 and enable ADC
     ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0) | (1 << ADEN);
-	printf("ADC setup!\n");
+	printf("\nADC setup!\n");
 }
 
 unsigned int ReadADC(char ADCchannel)
@@ -32,19 +32,22 @@ void GetAdcValue(void* param)
 {
     struct ADC_Task adcNum = *(struct ADC_Task*)param;
     int value = ReadADC(adcNum.channel);
+    //printf("%d\n", adcNum.n1);        
 
-    if(adcNum.n1 >= adcNum.n2 && adcNum.n1 > value)
+    if(adcNum.n1 >= adcNum.n2 && adcNum.n1 >= value)
     {
         //maximum
-        iobuffer[adcNum.maxValLoc] = adcNum.n1;
+       *((int *) &iobuffer[adcNum.maxValLoc]) = adcNum.n1;
     }
 
-    if(adcNum.n1 <= adcNum.n2 && adcNum.n1 < value)
+    if(adcNum.n1 <= adcNum.n2 && adcNum.n1 <= value)
     {
         //minimum
         iobuffer[adcNum.minValLoc] = adcNum.n1;
     }
     iobuffer[adcNum.ppValLoc] = *((int *) &iobuffer[adcNum.maxValLoc]) - *((int *) &iobuffer[adcNum.minValLoc]);
+    (*(struct ADC_Task*)param).n2 = adcNum.n1;
+    (*(struct ADC_Task*)param).n1 = value;
 }
 
 void CreateAdcTasks(){

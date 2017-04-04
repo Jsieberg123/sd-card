@@ -36,11 +36,11 @@ int main()
     stdout = &uart_output;
     stdin = &uart_input;
 
-    printf("App Starting!\n");
+    printf("\nApp Starting!\n");
 
     DDRD |= _BV(DDD7);
 
-    OCR1A = 80;
+    OCR1A = 800;
     TCCR1B = 0x09;
     TIMSK1 |= (1 << OCIE1A);    
 
@@ -49,7 +49,7 @@ int main()
     SetupSpi();
     sei();
 
-    AddTask(100000UI, NULL, ToggleLed);
+    AddTask(2500, NULL, ToggleLed);
 
     #if CARD_TYPE == CARD_TYPE_MOTORMONT
     SetupAdc();    
@@ -75,13 +75,12 @@ void ToggleLed(void* unused)
     if (StatusLed)
     {
         PORTD |= _BV(PORTD7);
-        printf("ON\n");
         StatusLed = false;
     }
     else
     {
         PORTD &= ~_BV(PORTD7);
-        printf("OFF\n");
         StatusLed = true;
     }
+    printf(".");
 }

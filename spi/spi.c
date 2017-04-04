@@ -23,6 +23,7 @@ volatile char addr;
 volatile char state = -1;
 
 ISR(SPI_STC_vect) {
+  cli();  
   char c = SPDR;
     if (state == 0x00) {
       if ((c & 0x001F) == slot) {
@@ -53,10 +54,13 @@ ISR(SPI_STC_vect) {
     {
       SPDR = 0x00;
     }
+    sei();
 }
 
 ISR(INT0_vect) {
-  printf("state: %02x val: \n", state & 0x00FF, iobuffer[100] & 0x00FF);
+  cli();
+  //printf("state: %02x val: \n", state & 0x00FF, iobuffer[100] & 0x00FF);
   state = 0;
   DDRB &= !_BV(DDB4);
+  sei();
 }
