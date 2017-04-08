@@ -45,6 +45,7 @@ int main()
     TIMSK1 |= (1 << OCIE1A);    
 
     iobuffer[0] = CARD_TYPE;
+    *((unsigned int *) &iobuffer[1]) = CARD_ID;
 
     SetupSpi();
     sei();

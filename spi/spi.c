@@ -16,7 +16,7 @@ void SetupSpi()
     EIMSK |= 0x01;
 
     //get slot
-    slot = 5;
+    slot = 2;
 }
 
 volatile char addr;

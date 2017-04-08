@@ -47,7 +47,8 @@ fi
 echo "Uploading to pi."
 scp bin/$SETUP/out.hex pi@$ADDR:~/bin/out.hex
 echo "Kill node"
-ssh pi@$ADDR 'killall node'
+ssh pi@$ADDR 'sudo service sd-device stop'
+ssh pi@$ADDR 'sudo killall node'
 echo "Uploading to avr"
 ssh pi@$ADDR 'sudo avrdude -p atmega328 -C ~/avrdude_gpio.conf -c pi_1 -v -U flash:w:bin/out.hex' &>bin/avrdude.txt
 echo "Done."
