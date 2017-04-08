@@ -12,7 +12,7 @@ unsigned int ReadADC(char ADCchannel);
 void SetupAdc()
 {
     // Select Vref=AVcc
-    ADMUX |= (1 << REFS0);
+    ADMUX = 0;
     //set prescaller to 128 and enable ADC
     ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0) | (1 << ADEN);
 	printf("\nADC setup!\n");
@@ -21,10 +21,11 @@ void SetupAdc()
 unsigned int ReadADC(char ADCchannel)
 {
     //select ADC channel with safety mask
-	ADMUX = (ADMUX & 0xF0) | (ADCchannel & 0x0F);
+	ADMUX = ADCchannel;
     //single conversion mode
 	ADCSRA |= (1 << ADSC);
     //wait until ADC conversion is complete while (ADCSRA & (1 << ADSC));
+    while(ADCSRA & (1 << ADSC));
     return ADC;
 }
 
@@ -43,9 +44,9 @@ void GetAdcValue(void* param)
     if(adcNum.n1 <= adcNum.n2 && adcNum.n1 <= value)
     {
         //minimum
-        iobuffer[adcNum.minValLoc] = adcNum.n1;
+        *((int *) &iobuffer[adcNum.minValLoc]) = adcNum.n1;
     }
-    iobuffer[adcNum.ppValLoc] = *((int *) &iobuffer[adcNum.maxValLoc]) - *((int *) &iobuffer[adcNum.minValLoc]);
+    *((int *) &iobuffer[adcNum.ppValLoc]) = *((int *) &iobuffer[adcNum.maxValLoc]) - *((int *) &iobuffer[adcNum.minValLoc]);
     (*(struct ADC_Task*)param).n2 = adcNum.n1;
     (*(struct ADC_Task*)param).n1 = value;
 }
@@ -91,7 +92,7 @@ void CreateAdcTasks(){
     adc4.ppValLoc = 38;
     AddTask(10, &adc4, GetAdcValue);
 
-    adc5.channel = 0;
+    adc5.channel = 5;
     adc5.n1 = 0;
     adc5.n2 = 0;
     adc5.maxValLoc = 40;

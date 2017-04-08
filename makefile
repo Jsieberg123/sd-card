@@ -20,15 +20,15 @@ generic:
 	mkdir -p bin/generic
 	$(CC) -o bin/generic/out.o $(SRC) $(CFLAGS) $(INCL) -D CARD_ID=$(ID)
 	avr-objcopy -j .text -j .data -O ihex bin/generic/out.o bin/generic/out.hex
-motormont:
-	mkdir -p bin/motormont
-	$(CC) -o bin/motormont/out.o $(SRC) $(CFLAGS) ${INCL} -D CARD_TYPE=CARD_TYPE_MOTORMONT -D CARD_ID=$(ID)
-	avr-objcopy -j .text -j .data -O ihex bin/motormont/out.o bin/motormont/out.hex
+current:
+	mkdir -p bin/current
+	$(CC) -o bin/current/out.o $(SRC) $(CFLAGS) ${INCL} -D CARD_TYPE=CARD_TYPE_CURRENT -D CARD_ID=$(ID)
+	avr-objcopy -j .text -j .data -O ihex bin/current/out.o bin/current/out.hex
 
-temperature:
-	mkdir -p bin/temperature
-	$(CC) -o bin/temperature/out.o $(SRC) $(CFLAGS) ${INCL} -D CARD_TYPE=CARD_TYPE_TEMPERATURE -D CARD_ID=$(ID)
-	avr-objcopy -j .text -j .data -O ihex bin/temperature/out.o bin/temperature/out.hex
+volts:
+	mkdir -p bin/volts
+	$(CC) -o bin/volts/out.o $(SRC) $(CFLAGS) ${INCL} -D CARD_TYPE=CARD_TYPE_VOLTAGE -D CARD_ID=$(ID)
+	avr-objcopy -j .text -j .data -O ihex bin/volts/out.o bin/volts/out.hex
 
 relay:
 	mkdir -p bin/relay

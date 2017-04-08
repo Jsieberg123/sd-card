@@ -52,7 +52,12 @@ int main()
 
     AddTask(2500, NULL, ToggleLed);
 
-    #if CARD_TYPE == CARD_TYPE_MOTORMONT
+    #if CARD_TYPE == CARD_TYPE_CURRENT
+    SetupAdc();    
+    CreateAdcTasks();
+    #endif
+
+    #if CARD_TYPE == CARD_TYPE_VOLTAGE
     SetupAdc();    
     CreateAdcTasks();
     #endif

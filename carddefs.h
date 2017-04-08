@@ -1,4 +1,4 @@
 #define CARD_TYPE_GENERIC 		0
-#define CARD_TYPE_MOTORMONT		1
-#define CARD_TYPE_TEMPERATURE 	2
-#define CARD_TYPE_RELAY 		3
+#define CARD_TYPE_CURRENT		1
+#define CARD_TYPE_VOLTAGE       2
+#define CARD_TYPE_RELAY 		4
