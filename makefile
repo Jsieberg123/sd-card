@@ -14,7 +14,7 @@ CFLAGS = -mmcu=atmega328 -O2 -std=gnu99
 
 default: generic
 
-all: motormont temperature relay generic
+all: current volts relay generic
 
 generic:
 	mkdir -p bin/generic
