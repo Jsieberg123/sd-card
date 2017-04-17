@@ -78,15 +78,5 @@ char StatusLed = false;
 
 void ToggleLed(void* unused)
 {
-    if (StatusLed)
-    {
-        PORTD |= _BV(PORTD7);
-        StatusLed = false;
-    }
-    else
-    {
-        PORTD &= ~_BV(PORTD7);
-        StatusLed = true;
-    }
     printf(".");
 }

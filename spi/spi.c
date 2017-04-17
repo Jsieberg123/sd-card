@@ -9,6 +9,12 @@
 volatile char iobuffer[IOBUFSIZE];
 volatile char slot;
 
+char getSlot()
+{
+  DDRD &= ~(_BV(DDD7) & _BV(DDD6) & _BV(DDD5));
+  char slot = (0xE0 & 0x08)<<5;
+}
+
 void SetupSpi()
 {
     SPCR = 0xC0;
@@ -16,7 +22,7 @@ void SetupSpi()
     EIMSK |= 0x01;
 
     //get slot
-    slot = 1;
+    slot = getSlot();
 }
 
 volatile char addr;
