@@ -7,12 +7,13 @@
 #include <stdio.h>
 
 volatile char iobuffer[IOBUFSIZE];
-volatile char slot;
+volatile unsigned char slot;
 
-char getSlot()
+void getSlot()
 {
-  DDRD &= ~(_BV(DDD7) & _BV(DDD6) & _BV(DDD5));
-  char slot = (0xE0 & 0x08)<<5;
+  DDRD &= 0xE0;
+  slot = (PIND)>>5;
+  printf("Slot: %d\n", slot);
 }
 
 void SetupSpi()
@@ -22,7 +23,7 @@ void SetupSpi()
     EIMSK |= 0x01;
 
     //get slot
-    slot = getSlot();
+    getSlot();
 }
 
 volatile char addr;

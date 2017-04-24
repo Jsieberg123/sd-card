@@ -63,6 +63,7 @@ int main()
     #endif
 
     #if CARD_TYPE == CARD_TYPE_RELAY
+    printf("Card type is relay.\n");    
     SetupRelays();
     CreateRelayTasks();
     #endif
