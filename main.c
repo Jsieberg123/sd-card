@@ -21,6 +21,7 @@
 #include "spi.h"
 #include "uart.h"
 #include "adc.h"
+#include "digital.h"
 #include "tasks.h"
 #include "relay.h"
 #include "carddefs.h"
@@ -53,13 +54,15 @@ int main()
     AddTask(2500, NULL, ToggleLed);
 
     #if CARD_TYPE == CARD_TYPE_CURRENT
+    printf("Card type is current.\n");    
     SetupAdc();    
     CreateAdcTasks();
     #endif
 
     #if CARD_TYPE == CARD_TYPE_VOLTAGE
-    SetupAdc();    
-    CreateAdcTasks();
+    printf("Card type is volts.\n");    
+    SetupDigital();    
+    CreateDigitalReadTasks();
     #endif
 
     #if CARD_TYPE == CARD_TYPE_RELAY

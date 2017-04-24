@@ -1,4 +1,4 @@
-INCL = -I . -I spi -I uart -I adc -I tasks -I relay
+INCL = -I . -I spi -I uart -I adc -I tasks -I relay -I digital
 
 ID := $(shell od -An -N2 -i /dev/random | tr -d ' ')
 
@@ -8,7 +8,8 @@ spi/spi.c \
 uart/uart.c \
 adc/adc.c \
 tasks/tasks.c \
-relay/relay.c
+relay/relay.c \
+digital/digital.c
 CC = avr-gcc
 CFLAGS = -mmcu=atmega328 -O2 -std=gnu99
 
