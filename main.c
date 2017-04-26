@@ -53,11 +53,13 @@ int main()
     AddTask(2500, NULL, ToggleLed);
 
     #if CARD_TYPE == CARD_TYPE_CURRENT
+    printf("Card type is current.\n");
     SetupAdc();    
     CreateAdcTasks();
     #endif
 
     #if CARD_TYPE == CARD_TYPE_VOLTAGE
+    printf("Card type is voltage.\n");
     SetupAdc();    
     CreateAdcTasks();
     #endif
@@ -79,5 +81,6 @@ char StatusLed = false;
 
 void ToggleLed(void* unused)
 {
-    printf(".");
+    //printf(".");
+    printf("%d\n", *((int *) &iobuffer[14]));
 }

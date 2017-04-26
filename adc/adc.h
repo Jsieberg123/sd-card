@@ -7,8 +7,8 @@ unsigned int ReadADC(char ADCchannel);
 
 struct ADC_Task{
     unsigned char channel;
-    unsigned int n1;
-    unsigned int n2;
+	unsigned int oldVals[100];
+	unsigned char pos;
 	unsigned char minValLoc;
 	unsigned char maxValLoc;
 	unsigned char ppValLoc;
