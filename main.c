@@ -81,6 +81,5 @@ char StatusLed = false;
 
 void ToggleLed(void* unused)
 {
-    //printf(".");
-    printf("%d\n", *((int *) &iobuffer[14]));
+    printf(".");
 }

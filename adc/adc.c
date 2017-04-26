@@ -11,9 +11,9 @@ unsigned int ReadADC(char ADCchannel);
 
 void SetupAdc()
 {
-    // Select Vref=AVcc
+    // Select Vref=ARef
     ADMUX = 0;
-    //set prescaller to 128 and enable ADC
+    //set prescaller to 1 and enable ADC
     ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0) | (1 << ADEN);
 	printf("\nADC setup!\n");
 }
@@ -31,29 +31,35 @@ unsigned int ReadADC(char ADCchannel)
 
 void GetAdcValue(void* param)
 {
-    struct ADC_Task *adcNum = (struct ADC_Task*)param;
-    int value = ReadADC((*adcNum).channel);
-    (*adcNum).pos = ((*adcNum).pos + 1) % 100;
-    (*adcNum).oldVals[(*adcNum).pos] = value;
-    int minVal = 1500;
-    int maxVal = 0;
+    //Cast intput as adc_task
+    struct ADC_Task *adcTask = (struct ADC_Task*)param;
 
+    //read adc value
+    int value = ReadADC((*adcTask).channel);
+    
+    //Save the latest value in the next position in the buffer
+    (*adcTask).pos = ((*adcTask).pos + 1) % 100;
+    (*adcTask).oldVals[(*adcTask).pos] = value;
+
+    //Search for the max and min values from last 100 results.
+    int minVal = 1024;
+    int maxVal = 0;
     for(int i=0;i<100;i++)
     {
-        if((*adcNum).oldVals[i] > maxVal)
+        if((*adcTask).oldVals[i] > maxVal)
         {
-            maxVal = (*adcNum).oldVals[i];
+            maxVal = (*adcTask).oldVals[i];
         }
-        if((*adcNum).oldVals[i] < minVal)
+        if((*adcTask).oldVals[i] < minVal)
         {
-            minVal = (*adcNum).oldVals[i];
+            minVal = (*adcTask).oldVals[i];
         }
     }
 
-    
-    *((int *) &iobuffer[(*adcNum).maxValLoc]) = maxVal;
-    *((int *) &iobuffer[(*adcNum).minValLoc]) = minVal;
-    *((int *) &iobuffer[(*adcNum).ppValLoc]) = maxVal - minVal;
+    //Output results to the iobuffer.
+    *((int *) &iobuffer[(*adcTask).maxValLoc]) = maxVal;
+    *((int *) &iobuffer[(*adcTask).minValLoc]) = minVal;
+    *((int *) &iobuffer[(*adcTask).ppValLoc]) = maxVal - minVal;
 }
 
 void CreateAdcTasks(){
